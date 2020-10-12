@@ -74,25 +74,41 @@ void close(){
     SDL_Quit();
 }
 
-int main( int argc, char* args[] )
-{
+int main( int argc, char* args[] ) {
     //Start SDL and create a window
-    if ( !init()) {
+    if (!init()) {
         printf("Filed to initialize!\n");
     } else {
-        //Load media
-        if( !loadMedia()) {
-            printf("Failed to load Media!\n");
-        } else{
-            //Apply the image
-            SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL);
-            SDL_UpdateWindowSurface( gWindow);
 
-            //Wait two seconds
-            SDL_Delay(10000);
+        //Load media
+        if (!loadMedia()) {
+            printf("Failed to load media! \n");
+        } else {
+            //Main loop flag
+            bool quit = false;
+
+            //Event handler
+            SDL_Event e;
+
+
+            //While application is running
+            while (!quit) {
+                //Handle events on queue
+                while (SDL_PollEvent(&e) != 0) {
+                    //User request quit
+                    if (e.type == SDL_QUIT) {
+                        quit = true;
+                    }
+                }
+
+                //Apply the image
+                SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
+
+                //Update the surface
+                SDL_UpdateWindowSurface(gWindow);
+            }
         }
     }
-
     //Free resources and close SDL
     close();
 
